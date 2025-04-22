@@ -32,6 +32,27 @@ const Navbar = ({ activeSection }) => {
     { title: "Careers", href: "/careers", id: "careers", isRoute: true },
   ];
 
+  // Add this function to handle mobile navigation
+  const handleMobileNavClick = (e, href, isRoute) => {
+    if (!isRoute) {
+      e.preventDefault();
+      
+      // Close the menu first
+      setIsOpen(false);
+      
+      // Then scroll to the section with slight delay to allow menu animation to complete
+      setTimeout(() => {
+        const element = document.querySelector(href);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 300);
+    } else {
+      // For route links, just close the menu and let the Link component handle navigation
+      setIsOpen(false);
+    }
+  };
+
   return (
     <motion.header
       initial={{ y: -100 }}
@@ -170,7 +191,7 @@ const Navbar = ({ activeSection }) => {
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
+            animate={{ opacity: 1, height: "100vh" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
             className="fixed inset-0 top-0 z-40 bg-white/95 backdrop-blur-lg md:hidden"
@@ -205,7 +226,7 @@ const Navbar = ({ activeSection }) => {
                             ? "text-blue-700"
                             : "text-gray-700"
                         }`}
-                        onClick={() => setIsOpen(false)}
+                        onClick={(e) => handleMobileNavClick(e, link.href, link.isRoute)}
                       >
                         {link.title}
                       </a>
@@ -223,7 +244,7 @@ const Navbar = ({ activeSection }) => {
                 <a
                   href="#contact"
                   className="px-8 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium shadow-lg"
-                  onClick={() => setIsOpen(false)}
+                  onClick={(e) => handleMobileNavClick(e, "#contact", false)}
                 >
                   Contact Us
                 </a>
